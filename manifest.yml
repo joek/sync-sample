@@ -1,8 +1,8 @@
 ---
 applications:
-- name: sync-webhook
+- name: sync-webhook-kwc
   command: node app.js
-  instances: 3
+  instances: 1
   memory: 128M
   default-route: true
   buildpack: nodejs_buildpack

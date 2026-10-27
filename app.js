@@ -1,34 +1,36 @@
 const express = require('express')
 var app = module.exports = express();
 
-app.use(express.json());
+const bodyLimit = process.env.BODY_LIMIT || '10mb';
+app.use(express.json({ limit: bodyLimit }));
+app.use(express.urlencoded({ extended: true, limit: bodyLimit }));
 
 console.log("Start....")
 
-app.post( '/case', function ( req, res) {
+app.post( '/hook', function ( req, res) {
     console.log(JSON.stringify(req.body))
     res = res.status(200);
     res = res.type('application/json');
 
-    let beforeImage = req.body.beforeImage
     let data = req.body.currentImage
 
-
-    data.extensions = data.extensions || {}
-    if (data.serviceTeam &&
-        beforeImage.serviceTeam &&
-        data.serviceTeam.id != beforeImage.serviceTeam.id) {
-            console.log("Team changed")
-            delete data.processor
-    }
     
-    console.log(data)
+    console.log(req.body)
     let body = {
         data: data
     }
-    console.log(JSON.stringify(body))
     res.send(body);
 })
+
+app.use((err, req, res, next) => {
+    if (err && err.type === 'entity.too.large') {
+        return res.status(413).json({
+            error: 'Payload too large',
+            limit: bodyLimit
+        });
+    }
+    next(err);
+});
 
 
 
