@@ -22,6 +22,14 @@ app.post( '/hook', function ( req, res) {
     res.send(body);
 })
 
+app.post( '/accountChange', function ( req, res) {
+    console.log(JSON.stringify(req.body))
+    res = res.status(201);
+    res = res.type('application/json');
+    res.end()
+})
+
+
 app.use((err, req, res, next) => {
     if (err && err.type === 'entity.too.large') {
         return res.status(413).json({
