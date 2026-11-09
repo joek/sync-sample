@@ -1,6 +1,6 @@
 ---
 applications:
-- name: sync-webhook-kwc
+- name: sync-webhook
   command: node app.js
   instances: 1
   memory: 128M
